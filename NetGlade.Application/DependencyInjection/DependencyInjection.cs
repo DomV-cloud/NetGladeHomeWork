@@ -1,4 +1,4 @@
-﻿using NetGlade.Infrastructure.Services.Authentication;
+﻿using NetGlade.Application.Services.Authentication;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace NetGlade.Application.DependencyInjection

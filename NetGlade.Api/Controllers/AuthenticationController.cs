@@ -1,5 +1,5 @@
 ﻿using NetGlade.Contracts.Authentication;
-using NetGlade.Infrastructure.Services.Authentication;
+using NetGlade.Application.Services.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
 namespace NetGlade.Api.Controllers

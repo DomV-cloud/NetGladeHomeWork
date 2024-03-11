@@ -7,7 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\NetGlade.Contracts\NetGlade.Contracts.csproj" />
+    <ProjectReference Include="..\NetGlade.Application\NetGlade.Application.csproj" />
   </ItemGroup>
 
 </Project>

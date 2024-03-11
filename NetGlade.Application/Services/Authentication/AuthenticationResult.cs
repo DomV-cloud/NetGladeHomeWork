@@ -1,4 +1,4 @@
-﻿namespace NetGlade.Infrastructure.Services.Authentication
+﻿namespace NetGlade.Application.Services.Authentication
 {
     public record AuthenticationResult
     (

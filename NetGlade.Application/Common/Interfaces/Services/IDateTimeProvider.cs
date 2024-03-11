@@ -8,6 +8,6 @@ namespace NetGlade.Application.Common.Interfaces.Services
 {
     public interface IDateTimeProvider
     {
-        DateTime UtcNow { get; set; }
+        DateTime UtcNow { get; }
     }
 }

@@ -4,6 +4,6 @@ namespace NetGlade.Infrastructure.Services
 {
     public class DateTimeProvider : IDateTimeProvider
     {
-        public DateTime Now { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        DateTime IDateTimeProvider.UtcNow => DateTime.UtcNow;
     }
 }

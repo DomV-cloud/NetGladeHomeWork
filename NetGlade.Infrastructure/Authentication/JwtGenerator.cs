@@ -1,5 +1,6 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using NetGlade.Application.Common.Interfaces;
+using NetGlade.Application.Common.Interfaces.Services;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -13,6 +14,13 @@ namespace NetGlade.Infrastructure.Authentication
 {
     public class JwtGenerator : IJwtTokenGenerator
     {
+        private readonly IDateTimeProvider _dateTimeProvider;
+
+        public JwtGenerator(IDateTimeProvider dateTimeProvider)
+        {
+            _dateTimeProvider = dateTimeProvider;
+        }
+
         public string GenerateToken(Guid userId, string firstName, string lastName)
         {
             var signingCredentials = new SigningCredentials(
@@ -31,7 +39,7 @@ namespace NetGlade.Infrastructure.Authentication
 
             var securityToken = new JwtSecurityToken(
                 issuer: "NetGlade",
-                expires: DateTime.Now.AddDays(1),
+                expires: _dateTimeProvider.UtcNow.AddMinutes(60),
                 claims: claims,
                 signingCredentials: signingCredentials);
 

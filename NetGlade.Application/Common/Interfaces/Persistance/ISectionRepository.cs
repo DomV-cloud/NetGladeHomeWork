@@ -11,7 +11,7 @@ namespace NetGlade.Application.Common.Interfaces.Persistance
 
         Task<bool> UpdateSection(Section newSection, string nameOfSectionToUpdate);
 
-        Task<bool> DeleteSection(Section section);
+        Task<bool> DeleteSection(string sectionName);
 
     }
 }

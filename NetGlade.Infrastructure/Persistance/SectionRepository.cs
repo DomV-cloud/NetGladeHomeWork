@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ZXing;
 
 namespace NetGlade.Infrastructure.Persistance
 {
@@ -29,38 +30,39 @@ namespace NetGlade.Infrastructure.Persistance
                     throw new ArgumentNullException(nameof(section));
                 }
                 await _context.Sections.AddAsync(section);
+                
                 await _context.SaveChangesAsync();
 
                 return new BaseResponse<Section?>(section);
             }
         }
 
-        public async Task<bool> DeleteSection(Section section)
+        public async Task<bool> DeleteSection(string sectionName)
         {
-            using (var context = _context)
-            {
-                _context.Sections.Remove(section);
-                int result = await _context.SaveChangesAsync();
+            var sectionToDelete = await GetSectionByName(sectionName);
 
-                return result > 0;
+            if (sectionToDelete is null)
+            {
+                return false;
             }
+
+            _context.Sections.Remove(sectionToDelete);
+
+            int isRemoved = await _context.SaveChangesAsync();
+
+            return isRemoved > 0;
         }
 
         public async Task<Section?> GetSectionByName(string sectionName)
         {
-            using (var context = _context)
+            if (String.IsNullOrEmpty(sectionName))
             {
-                if (String.IsNullOrEmpty(sectionName))
-                {
-                    throw new Exception("Name of the section is empty");
-                }
-
-                var section = await _context.Sections.FirstOrDefaultAsync(s => s.SectionName == sectionName);
-
-                await _context.SaveChangesAsync();
-
-                return section;
+                return null;
             }
+
+            var section = await _context.Sections.FirstOrDefaultAsync(s => s.SectionName == sectionName);
+
+            return section;
         }
 
         public async Task<bool> UpdateSection(Section newSection, string nameOfSectionToUpdate)

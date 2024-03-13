@@ -24,6 +24,7 @@ namespace NetGlade.Infrastructure.DependencyInjection
             services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
 
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ISectionRepository, SectionRepository>();
 
             return services;
         }

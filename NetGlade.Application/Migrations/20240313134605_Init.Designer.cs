@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetGlade.Application.DatabaseContext;
 
@@ -11,9 +12,11 @@ using NetGlade.Application.DatabaseContext;
 namespace NetGlade.Application.Migrations
 {
     [DbContext(typeof(NetGladeContext))]
-    partial class NetGladeContextModelSnapshot : ModelSnapshot
+    [Migration("20240313134605_Init")]
+    partial class Init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

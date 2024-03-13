@@ -2,13 +2,13 @@
 
 namespace NetGlade.Domain.Entities
 {
-    public class Category
+    public class Section
     {
-        [Required]
         [Key]
+        [Required]
         public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required]
-        public string CategoryName { get; set; } = null!;
+        public string SectionName { get; set; } = null!;
     }
 }

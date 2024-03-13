@@ -5,6 +5,7 @@ namespace NetGlade.Domain.Entities
     public class User
     {
         [Required]
+        [Key]
         public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required]

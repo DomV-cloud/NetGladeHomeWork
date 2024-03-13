@@ -1,5 +1,7 @@
 using NetGlade.Infrastructure.DependencyInjection;
 using NetGlade.Application.DependencyInjection;
+using NetGlade.Application.DatabaseContext;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 {
@@ -10,6 +12,9 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services
         .AddApplication()
         .AddInfrastructure(builder.Configuration);
+
+    builder.Services.AddDbContext<NetGladeContext>(options =>
+               options.UseSqlServer(builder.Configuration.GetConnectionString("sqlConnection")));
 }
 
 var app = builder.Build();

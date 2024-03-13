@@ -1,11 +1,10 @@
-﻿namespace NetGlade.Application.Services.Authentication
+﻿using NetGlade.Domain.Entities;
+
+namespace NetGlade.Application.Services.Authentication
 {
     public record AuthenticationResult
     (
-        Guid Id,
-        string FirstName, 
-        string LastName, 
-        string Email,
+        User User,
         string Token
     );
 }

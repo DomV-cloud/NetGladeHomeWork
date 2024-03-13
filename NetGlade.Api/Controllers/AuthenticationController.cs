@@ -1,6 +1,7 @@
 ﻿using NetGlade.Contracts.Authentication;
 using NetGlade.Application.Services.Authentication;
 using Microsoft.AspNetCore.Mvc;
+using NetGlade.Application.PaginationFilter;
 
 namespace NetGlade.Api.Controllers
 {
@@ -26,11 +27,10 @@ namespace NetGlade.Api.Controllers
                 request.Password
                 );
 
-            var response = new AuthenticationResult(
-                authResult.Id,
-                authResult.FirstName,
-                authResult.LastName,
-                authResult.Email,
+            var response = new AuthenticationResponse(
+                authResult.User.FirstName,
+                authResult.User.LastName,
+                authResult.User.Email,
                 authResult.Token
                 );
 
@@ -40,7 +40,19 @@ namespace NetGlade.Api.Controllers
         [HttpPost("login", Name = "login")]
         public IActionResult Login(LoginRequest request)
         {
-            return Ok(request);
+            var authResult = _authenticationService.Login(
+                request.Email,
+                request.Password);
+
+            var response = new AuthenticationResponse(
+                authResult.User.FirstName,
+                authResult.User.LastName,
+                authResult.User.Email,
+                authResult.Token
+                );
+
+            return Ok(response);
         }
+
     }
 }

@@ -1,9 +1,11 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NetGlade.Application.Common.Interfaces;
+using NetGlade.Application.Common.Interfaces.Persistance;
 using NetGlade.Application.Common.Interfaces.Services;
 using NetGlade.Application.Services.Authentication;
 using NetGlade.Infrastructure.Authentication;
+using NetGlade.Infrastructure.Persistance;
 using NetGlade.Infrastructure.Services;
 
 namespace NetGlade.Infrastructure.DependencyInjection
@@ -18,9 +20,11 @@ namespace NetGlade.Infrastructure.DependencyInjection
 
             services.AddScoped<IAuthenticationService, AuthenticationService>();
 
-            services.AddSingleton<IJwtTokenGenerator, JwtGenerator>();
+            services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
             services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
-             
+
+            services.AddScoped<IUserRepository, UserRepository>();
+
             return services;
         }
     }

@@ -1,4 +1,7 @@
-﻿using NetGlade.Contracts.Authentication;
+﻿using NetGlade.Application.Pagination;
+using NetGlade.Contracts.Authentication;
+using NetGlade.Domain.Entities;
+using NetGlade.Application.PaginationFilter;
 
 namespace NetGlade.Application.Services.Authentication
 

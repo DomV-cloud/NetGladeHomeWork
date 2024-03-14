@@ -14,6 +14,7 @@ namespace NetGlade.Api.Controllers
         private readonly ILogger<SectionController> _logger;
 
         //TODO: Adding Logging message
+        // TODO: Controllers should not retrieve sensitive data like token or Id
 
         public SectionController(ISectionRepository sectionRepository, ILogger<SectionController> logger)
         {

@@ -15,6 +15,7 @@ namespace NetGlade.Api.Controllers
         private readonly ILogger<AuthenticationController> _logger;
         
         //TODO: Adding Logging message
+        // TODO: Controllers should not retrieve sensitive data like token or Id
 
         public AuthenticationController(
             IAuthenticationService authenticationService, 

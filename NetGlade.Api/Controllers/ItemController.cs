@@ -15,6 +15,8 @@ namespace NetGlade.Api.Controllers
         private readonly IItemRepository _itemRepository;
         private readonly ILogger<ItemController> _logger;
 
+        // TODO: Controllers should not retrieve sensitive data like token or Id
+
         public ItemController(IItemRepository itemRepository, ILogger<ItemController> logger)
         {
             _itemRepository = itemRepository;

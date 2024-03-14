@@ -48,6 +48,7 @@ namespace NetGlade.Api.Controllers
             }
         }
 
+        
         [HttpGet("get/{sectionName}", Name = "get")]
         public async Task<IActionResult> GetSection([FromRoute] string sectionName)
         {

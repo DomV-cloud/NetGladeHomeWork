@@ -13,6 +13,8 @@ namespace NetGlade.Api.Controllers
         private readonly ISectionRepository _sectionRepository;
         private readonly ILogger<SectionController> _logger;
 
+        //TODO: Adding Logging message
+
         public SectionController(ISectionRepository sectionRepository, ILogger<SectionController> logger)
         {
             _sectionRepository = sectionRepository;
@@ -24,21 +26,20 @@ namespace NetGlade.Api.Controllers
         {
             try
             {
-                if (request.Section is null)
+                if (request is null)
                 {
                     return NotFound("Failed to create section.");
                 }
 
                 var response = await _sectionRepository.AddSection(request.Section);
 
-                if (response != null)
-                {
-                    return Ok(response);
-                }
-                else
+                if (response == null)
                 {
                     return NotFound("Failed to create section.");
+                    
                 }
+
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -47,22 +48,24 @@ namespace NetGlade.Api.Controllers
             }
         }
 
-
         [HttpGet("get/{sectionName}", Name = "get")]
         public async Task<IActionResult> GetSection([FromRoute] string sectionName)
         {
             try
             {
+                if (String.IsNullOrEmpty(sectionName))
+                {
+                    return BadRequest("name of the section is empty or null");
+                }
+
                 var response = await _sectionRepository.GetSectionByName(sectionName);
 
-                if (response != null)
-                {
-                    return Ok(response);
-                }
-                else
+                if (response == null)
                 {
                     return NotFound("Failed to get section. Section not found.");
                 }
+
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -76,16 +79,19 @@ namespace NetGlade.Api.Controllers
         {
             try
             {
+                if (String.IsNullOrEmpty(sectionName))
+                {
+                    return BadRequest("name of the section is empty or null");
+                }
+
                 var response = await _sectionRepository.DeleteSection(sectionName);
 
-                if (response)
+                if (!response)
                 {
-                    return Ok(response);
+                    return NotFound("Failed to get section. Section not found.");
                 }
-                else
-                {
-                    return NotFound("Failed to delete. Section not found.");
-                }
+
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -99,16 +105,24 @@ namespace NetGlade.Api.Controllers
         {
             try
             {
+                if (request is null)
+                {
+                    return BadRequest("Section is null");
+                }
+
+                if (String.IsNullOrEmpty(sectionName))
+                {
+                    return BadRequest("name of the section is empty or null");
+                }
+
                 var response = await _sectionRepository.UpdateSection(request.Section, sectionName);
 
-                if (response)
+                if (!response)
                 {
-                    return Ok(response);
+                    return NotFound("Failed to get section. Section not found.");
                 }
-                else
-                {
-                    return NotFound("Failed to update. Section not found.");
-                }
+
+                return Ok(response);
             }
             catch (Exception ex)
             {

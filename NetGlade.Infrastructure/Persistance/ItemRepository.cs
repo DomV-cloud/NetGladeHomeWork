@@ -23,6 +23,7 @@ namespace NetGlade.Infrastructure.Persistance
             {
                 throw new ArgumentNullException(nameof(item));
             }
+
             await _context.Items.AddAsync(item);
 
             await _context.SaveChangesAsync();

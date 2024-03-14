@@ -14,7 +14,5 @@ namespace NetGlade.Domain.Entities
         [Required]
         [JsonPropertyName("sectionName")]
         public string SectionName { get; set; } = null!;
-
-        public virtual ICollection<Item> Items { get; set; } = null!;
     }
 }

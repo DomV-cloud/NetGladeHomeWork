@@ -12,7 +12,9 @@ namespace NetGlade.Api.Controllers
     public class AuthenticationController : Controller
     {
         private readonly IAuthenticationService _authenticationService;
-        private readonly ILogger<AuthenticationController> _logger; // doplnit logování
+        private readonly ILogger<AuthenticationController> _logger;
+        
+        //TODO: Adding Logging message
 
         public AuthenticationController(
             IAuthenticationService authenticationService, 

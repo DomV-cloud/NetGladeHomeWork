@@ -12,7 +12,7 @@ using NetGlade.Application.DatabaseContext;
 namespace NetGlade.Application.Migrations
 {
     [DbContext(typeof(NetGladeContext))]
-    [Migration("20240313134605_Init")]
+    [Migration("20240314071005_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -29,11 +29,13 @@ namespace NetGlade.Application.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasAnnotation("Relational:JsonPropertyName", "id");
 
                     b.Property<string>("CategoryName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasAnnotation("Relational:JsonPropertyName", "categoryName");
 
                     b.HasKey("Id");
 
@@ -42,41 +44,51 @@ namespace NetGlade.Application.Migrations
 
             modelBuilder.Entity("NetGlade.Domain.Entities.EANCode", b =>
                 {
-                    b.Property<string>("Code")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasAnnotation("Relational:JsonPropertyName", "id");
 
-                    b.HasKey("Code");
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasAnnotation("Relational:JsonPropertyName", "code");
+
+                    b.HasKey("Id");
 
                     b.ToTable("EANCodes");
+
+                    b.HasAnnotation("Relational:JsonPropertyName", "itemEanCode");
                 });
 
             modelBuilder.Entity("NetGlade.Domain.Entities.Item", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasAnnotation("Relational:JsonPropertyName", "id");
+
+                    b.Property<Guid>("CategoryId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ItemCategoryId")
+                    b.Property<Guid>("ItemEanCodeId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ItemEanCodeCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ItemName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasAnnotation("Relational:JsonPropertyName", "itemName");
 
-                    b.Property<Guid>("ItemSectionId")
+                    b.Property<Guid>("SectionId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ItemCategoryId");
+                    b.HasIndex("CategoryId");
 
-                    b.HasIndex("ItemEanCodeCode");
+                    b.HasIndex("ItemEanCodeId");
 
-                    b.HasIndex("ItemSectionId");
+                    b.HasIndex("SectionId");
 
                     b.ToTable("Items");
                 });
@@ -85,11 +97,13 @@ namespace NetGlade.Application.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasAnnotation("Relational:JsonPropertyName", "id");
 
                     b.Property<string>("SectionName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasAnnotation("Relational:JsonPropertyName", "sectionName");
 
                     b.HasKey("Id");
 
@@ -100,23 +114,28 @@ namespace NetGlade.Application.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasAnnotation("Relational:JsonPropertyName", "id");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasAnnotation("Relational:JsonPropertyName", "email");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasAnnotation("Relational:JsonPropertyName", "firstName");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasAnnotation("Relational:JsonPropertyName", "LastName");
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasAnnotation("Relational:JsonPropertyName", "password");
 
                     b.HasKey("Id");
 
@@ -125,29 +144,39 @@ namespace NetGlade.Application.Migrations
 
             modelBuilder.Entity("NetGlade.Domain.Entities.Item", b =>
                 {
-                    b.HasOne("NetGlade.Domain.Entities.Category", "ItemCategory")
-                        .WithMany()
-                        .HasForeignKey("ItemCategoryId")
+                    b.HasOne("NetGlade.Domain.Entities.Category", "Category")
+                        .WithMany("Items")
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("NetGlade.Domain.Entities.EANCode", "ItemEanCode")
                         .WithMany()
-                        .HasForeignKey("ItemEanCodeCode")
+                        .HasForeignKey("ItemEanCodeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("NetGlade.Domain.Entities.Section", "ItemSection")
-                        .WithMany()
-                        .HasForeignKey("ItemSectionId")
+                    b.HasOne("NetGlade.Domain.Entities.Section", "Section")
+                        .WithMany("Items")
+                        .HasForeignKey("SectionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ItemCategory");
+                    b.Navigation("Category");
 
                     b.Navigation("ItemEanCode");
 
-                    b.Navigation("ItemSection");
+                    b.Navigation("Section");
+                });
+
+            modelBuilder.Entity("NetGlade.Domain.Entities.Category", b =>
+                {
+                    b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("NetGlade.Domain.Entities.Section", b =>
+                {
+                    b.Navigation("Items");
                 });
 #pragma warning restore 612, 618
         }

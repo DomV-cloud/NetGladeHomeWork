@@ -23,18 +23,15 @@ namespace NetGlade.Infrastructure.Persistance
 
         public async Task<BaseResponse<Section?>> AddSection(Section section)
         {
-            using (var context = _context)
+            if (section is null)
             {
-                if (section is null)
-                {
-                    throw new ArgumentNullException(nameof(section));
-                }
-                await _context.Sections.AddAsync(section);
-                
-                await _context.SaveChangesAsync();
-
-                return new BaseResponse<Section?>(section);
+                throw new ArgumentNullException(nameof(section));
             }
+            await _context.Sections.AddAsync(section);
+
+            await _context.SaveChangesAsync();
+
+            return new BaseResponse<Section?>(section);
         }
 
         public async Task<bool> DeleteSection(string sectionName)
@@ -67,18 +64,25 @@ namespace NetGlade.Infrastructure.Persistance
 
         public async Task<bool> UpdateSection(Section newSection, string nameOfSectionToUpdate)
         {
-            var sectionToUpdate = await GetSectionByName(newSection.SectionName);
-
-            sectionToUpdate = newSection;
-
-            using (var context = _context)
+            if (newSection is null)
             {
-                _context.Sections.Update(sectionToUpdate);
-
-                int result = await _context.SaveChangesAsync();
-
-                return result > 0;
+                return false;
             }
+
+            var sectionToUpdate = await GetSectionByName(nameOfSectionToUpdate);
+
+            if (sectionToUpdate is null)
+            {
+                return false;
+            }
+
+            sectionToUpdate.SectionName = newSection.SectionName;
+
+            _context.Sections.Update(sectionToUpdate);
+
+            int result = await _context.SaveChangesAsync();
+
+            return result > 0;
         }
     }
 }

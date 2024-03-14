@@ -1,13 +1,13 @@
-﻿using Azure.Core;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using NetGlade.Api.Filters;
 using NetGlade.Application.Common.Interfaces.Persistance;
 using NetGlade.Contracts.Sections;
-using NetGlade.Domain.Entities;
 
 namespace NetGlade.Api.Controllers
 {
     [ApiController]
     [Route("section")]
+    [ErrorHandlingFilter]
     public class SectionController : Controller
     {
         private readonly ISectionRepository _sectionRepository;
@@ -24,6 +24,11 @@ namespace NetGlade.Api.Controllers
         {
             try
             {
+                if (request.Section is null)
+                {
+                    return NotFound("Failed to create section.");
+                }
+
                 var response = await _sectionRepository.AddSection(request.Section);
 
                 if (response != null)
@@ -32,7 +37,7 @@ namespace NetGlade.Api.Controllers
                 }
                 else
                 {
-                    return NotFound("Failed to create section. Section not found.");
+                    return NotFound("Failed to create section.");
                 }
             }
             catch (Exception ex)
@@ -79,13 +84,38 @@ namespace NetGlade.Api.Controllers
                 }
                 else
                 {
-                    return NotFound("Failed to get section. Section not found.");
+                    return NotFound("Failed to delete. Section not found.");
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while getting section");
-                return BadRequest("Failed to get section: " + ex.Message);
+                _logger.LogError(ex, "Error occurred while deleting section");
+                return BadRequest("Failed to delete: " + ex.Message);
+            }
+        }
+
+        [HttpPut("update/{sectionName}", Name = "update")]
+        public async Task<IActionResult> UpdateSection([FromQuery] SectionRequest request, [FromRoute] string sectionName)
+        {
+            try
+            {
+                var response = await _sectionRepository.UpdateSection(request.Section, sectionName);
+
+                if (response)
+                {
+                    return Ok(response);
+                }
+                else
+                {
+                    return NotFound("Failed to update. Section not found.");
+                }
+            }
+            catch (Exception ex)
+            {
+                
+                _logger.LogError(ex, "Error occurred while updating section");
+
+                return BadRequest("Failed to update section: " + ex.Message);
             }
         }
     }

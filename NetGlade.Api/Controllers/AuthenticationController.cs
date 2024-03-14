@@ -2,19 +2,24 @@
 using NetGlade.Application.Services.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using NetGlade.Application.PaginationFilter;
+using NetGlade.Api.Filters;
 
 namespace NetGlade.Api.Controllers
 {
     [ApiController]
     [Route("auth")]
+    [ErrorHandlingFilter]
     public class AuthenticationController : Controller
     {
         private readonly IAuthenticationService _authenticationService;
+        private readonly ILogger<AuthenticationController> _logger; // doplnit logování
 
         public AuthenticationController(
-            IAuthenticationService authenticationService)
+            IAuthenticationService authenticationService, 
+            ILogger<AuthenticationController> logger)
         {
             _authenticationService = authenticationService;
+            _logger = logger;
         }
 
         [HttpPost("register", Name = "register")]

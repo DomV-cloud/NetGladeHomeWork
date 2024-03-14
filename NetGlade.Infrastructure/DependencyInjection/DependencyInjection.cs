@@ -25,6 +25,7 @@ namespace NetGlade.Infrastructure.DependencyInjection
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ISectionRepository, SectionRepository>();
+            services.AddScoped<IItemRepository, ItemRepository>();
 
             return services;
         }

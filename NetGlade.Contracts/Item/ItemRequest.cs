@@ -4,6 +4,6 @@ namespace NetGlade.Contracts.Items
 {
     public record ItemRequest
     (
-        Item item
+        Item Item
         );
 }

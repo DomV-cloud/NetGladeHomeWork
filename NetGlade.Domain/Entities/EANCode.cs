@@ -13,6 +13,5 @@ namespace NetGlade.Domain.Entities
         [Required]
         [JsonPropertyName("code")]
         public string Code { get; set; } = null!;
-
     }
 }

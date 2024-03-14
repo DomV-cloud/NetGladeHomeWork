@@ -8,15 +8,17 @@ namespace NetGlade.Application.Common.Interfaces.Persistance
     {
         Task<BaseResponse<Item?>> AddItem(Item item);
 
-        Task<bool> DeleteItemByEanCode(EANCode code);
+        Task<bool> DeleteItemByEanCode(Guid id);
 
-        Task<bool> UpdateItem(Item newItem, string nameOfItemToUpdate);
+        Task<bool> UpdateItem(Item newItem, Guid Id);
         
-        Task<Item?>? GetItemByName(string itemName);
+        Task<Item?>? GetItemById(Guid Id);
 
         Task<PagedResponse<List<Item>>?>? GetItemsByName(BasePaginationFilter filter, string itemName);
 
         Task<PagedResponse<List<Item>>?>? GetItemsBySection(BasePaginationFilter filter, Guid sectionId);
+
+        Task<PagedResponse<List<Item>>?>? GetItemsByCategory(BasePaginationFilter filter, Guid categoryId);
 
     }
 }

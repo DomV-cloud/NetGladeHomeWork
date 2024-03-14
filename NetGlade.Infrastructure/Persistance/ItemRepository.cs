@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using NetGlade.Application.Common.Interfaces.Persistance;
 using NetGlade.Application.DatabaseContext;
 using NetGlade.Application.Pagination;
@@ -29,16 +30,16 @@ namespace NetGlade.Infrastructure.Persistance
             return new BaseResponse<Item?>(item);
         }
 
-        public async Task<bool> DeleteItemByEanCode(EANCode code)
+        public async Task<bool> DeleteItemByEanCode(Guid Id)
         {
-            if (code is null)
+            if (Id == Guid.Empty)
             {
                 return false;
             }
 
-            var deletedItemByCode = await _context.Items.FirstOrDefaultAsync(i => i.ItemEanCode.Id == code.Id);
+            var deletedItemByCode = await _context.Items.FirstOrDefaultAsync(i => i.ItemEanCode.Id == Id);
 
-            if (deletedItemByCode == null)
+            if (deletedItemByCode is null)
             {
                 return false;
             }
@@ -92,44 +93,69 @@ namespace NetGlade.Infrastructure.Persistance
             return new PagedResponse<List<Item>>(pagedData, validFilter.PageNumber, validFilter.PageSize, totalRecords);
         }
 
-        public async Task<Item?>? GetItemByName(string itemName)
+        public async Task<Item?>? GetItemById(Guid Id)
         {
-            if (String.IsNullOrEmpty(itemName))
+            if (String.IsNullOrEmpty(Id.ToString()))
             {
                 return null;
             }
 
-            var item = await _context.Items.FirstOrDefaultAsync(i => i.ItemName == itemName);
+            var item = await _context.Items.FirstOrDefaultAsync(i => i.Id == Id);
+
+            if (item is null)
+            {
+                return null;
+            }
 
             return item;
         }
 
-        public async Task<bool> UpdateItem(Item newItem, string nameOfItemToUpdate)
+        public async Task<bool> UpdateItem(Item newItem, Guid itemId)
         {
-            if (newItem is null)
+            if (newItem == null)
             {
                 return false;
             }
 
-            if (String.IsNullOrEmpty(nameOfItemToUpdate))
+            var existingItem = await _context.Items.FirstOrDefaultAsync(i => i.Id == itemId);
+
+            if (existingItem == null)
             {
                 return false;
             }
+            
+            existingItem.ItemName = newItem.ItemName;
+            existingItem.ItemEanCode = newItem.ItemEanCode;
+            existingItem.CategoryId = newItem.CategoryId;
+            existingItem.SectionId = newItem.SectionId;
 
-            var itemToUpdate = await GetItemByName(nameOfItemToUpdate);
-
-            if (itemToUpdate is null)
-            {
-                return false;
-            }
-
-            itemToUpdate.ItemName = newItem.ItemName;
-
-            _context.Items.Update(itemToUpdate);
+            _context.Items.Update(existingItem);
 
             int result = await _context.SaveChangesAsync();
 
             return result > 0;
+        }
+
+        public async Task<PagedResponse<List<Item>>?>? GetItemsByCategory(BasePaginationFilter filter, Guid categoryId)
+        {
+            if (categoryId == Guid.Empty)
+            {
+                return null;
+            }
+
+            var validFilter = new BasePaginationFilter(filter.PageNumber, filter.PageSize);
+
+            var pagedData = await _context.Items
+                .Where(item => item.CategoryId == categoryId)
+                .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+                .Take(validFilter.PageSize)
+                .ToListAsync();
+
+            var totalRecords = await _context.Items
+                .Where(item => item.CategoryId == categoryId)
+                .CountAsync();
+
+            return new PagedResponse<List<Item>>(pagedData, validFilter.PageNumber, validFilter.PageSize, totalRecords);
         }
     }
 }
